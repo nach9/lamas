@@ -1,5 +1,5 @@
 const Report = require('../models/reports');
-
+require('dotenv').config()
 const jwt = require('jsonwebtoken')
 
 class ReportController{
@@ -12,14 +12,17 @@ class ReportController{
   }
 
   static addNew(req,res){
-    // let decode=jwt.verify(req.body.token, process.env.APPSECRET)
+    let decode=jwt.verify(req.body.token, process.env.APPSECRET)
     let insert={
-      // fbID:decode.id,
-      fbID:1000,
+      fbID:decode.id,
+      name:decode.name,
+      email:decode.email,
+      imagepostUrl:req.file.cloudStoragePublicUrl ,
+      imageuserUrl:decode.imageUrl,
       postedAt: new Date(),
       headline:req.body.headline,
-      detail:req.body.detail,
-      imgUrl:req.file.cloudStoragePublicUrl
+      detail:req.body.detail
+
     }
     Report.create(insert).then((result)=>{
       res.json(200,{msg:'new post', reports:result})
@@ -51,7 +54,7 @@ class ReportController{
 
     Report.findByIdAndUpdate(
     req.params.reportid,
-    {$push: {"votes": {voter:decode.id,voteAt:new Date()}}},
+    {$push: {"votes": {voterid:decode.id,votername:decode.name,votermail:decode.email,voterimageUrl:decode.imageUrl,voteAt:new Date()}}},
     {safe: true, upsert: true}
   ).then(result=>{
     res.json(200,{msg:"voted id", reports:result})
@@ -65,7 +68,7 @@ class ReportController{
   static downVote(req,res){
     let decode=jwt.verify(req.body.token, process.env.APPSECRET)
 
-    Report.update({ _id: req.params.reportid }, { "$pull": { "votes": { "voter": decode.id } }}, { safe: true, multi:true }, function(err, obj) {
+    Report.update({ _id: req.params.reportid }, { "$pull": { "votes": { "voterid": decode.id } }}, { safe: true, multi:true }, function(err, obj) {
       res.json(200,{msg:"downvoted", reports:obj})
     });
   }
@@ -73,7 +76,7 @@ class ReportController{
 
   static deleteData(req,res){
     let condition={
-      _id : req.body.id
+      _id : req.params.reportid
     }
     Report.findOneAndRemove(condition).then(result=>{
       res.json(200,{msg:"deleted id", reports:result})

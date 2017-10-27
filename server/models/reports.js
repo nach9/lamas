@@ -4,11 +4,14 @@ var Schema = mongoose.Schema;
 
 var reportSchema = new Schema({
   fbID:String,
+  name:String,
+  email:String,
+  imagepostUrl:String,
+  imageuserUrl:String,
   postedAt: Date,
   headline:String,
   detail:String,
-  imgUrl:String,
-  votes:[{voter:String,voteAt:Date}]
+  votes:[{voterid:String,votername:String,votermail:String,voterimageUrl:String,voteAt:Date}]
 });
 
 var Report = mongoose.model('Report', reportSchema);
