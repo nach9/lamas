@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/nach9/lamas#readme",
   "dependencies": {
+    "@google-cloud/storage": "^1.4.0",
     "axios": "^0.17.0",
     "body-parser": "^1.18.2",
     "cors": "^2.8.4",
@@ -25,6 +26,7 @@
     "fb": "^2.0.0",
     "jsonwebtoken": "^8.1.0",
     "mongoose": "^4.12.4",
+    "multer": "^1.3.0",
     "vue": "^2.5.2"
   }
 }
