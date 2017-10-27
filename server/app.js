@@ -13,9 +13,13 @@ app.get('/', (req,res,nex)=>{
     {name:'server',port:3000}
   )
 })
+
+const reports = require('./routes/reports');
 const login = require('./routes/login');
 
+app.use('/api/reports', reports);
 app.use('/api/login',login);
+
 
 app.listen(process.env.PORT || 3000, ()=>{
   console.log('Listening from port 3000');
